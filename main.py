@@ -1,11 +1,12 @@
 import streamlit as st
 import requests
 import os
+import pandas as pd
 from dotenv import load_dotenv
 
 # Load the API key from "weatherapi.com"
 load_dotenv()
-API_KEY = os.getenv("WEATHER_API_KEY")
+API_KEY = os.getenv("WEATHER_API_KEY", st.secrets["api"]["WEATHER_API_KEY"])
 BASE_URL = "https://api.weatherapi.com/v1/forecast.json"
 
 
@@ -25,7 +26,7 @@ def get_weather(city_name):
         print("Error:", response.status_code, response.text)  # Debug info
         return None
 
-
+    # Show the current weather at the location
 def display_weather(data):
     location = data['location']
     current = data['current']
@@ -40,10 +41,18 @@ def display_weather(data):
     st.write(f"**Wind Speed:** {current['wind_kph']} km/h")
     st.write(f"**Visibility:** {current['vis_km']} km")
 
+    # Show the location pinpoint on a map
+    st.subheader("Location on Map 🗺️")
+    lat = location['lat']
+    lon = location['lon']
+    map_data = pd.DataFrame({'lat': [lat], 'lon': [lon]})
+    st.map(map_data)
+
 def display_forecast(data):
     forecast_days = data['forecast']['forecastday']
     st.subheader("5-Day Forecast 🌤️")
     cols = st.columns(5)
+
     for i, day in enumerate(forecast_days):
         date = day['date']
         avg_temp = day['day']['avgtemp_c']
