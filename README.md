@@ -1,31 +1,30 @@
-# The Weather App 
+# The Weather App☀️ 
 (based on Streamlit + WeatherAPI)
 
-This is a simple and elegant Weather App built with **Python**, **Streamlit**, and **WeatherAPI**. It allows users to:
+This is a simple, interactive weather app built using **Python**, **Streamlit**, and **[WeatherAPI.com](https://www.weatherapi.com/)**. It allows users to:
 
-- 🔍 Search for any city in the world
-- 📍 View the **current** weather conditions
-- 🗓️ See a **5-day weather forecast**
-
----
-
-## 🚀 Features
-
-- Displays **real-time weather** using [WeatherAPI.com](https://www.weatherapi.com/)
-- Shows:
-  - Current temperature, condition, humidity, wind speed, visibility, and local time.
-  - Weather icon for current condition.
-  - 5-day forecast with icons, condition, and average temperature.
-- Streamlit-based interactive user interface.
+- 🔍 Search any city in the world
+- 🌤️ View **current weather** conditions (temperature, wind, humidity, etc.)
+- 📅 See a **5-day weather forecast** displayed in a horizontal layout
+- 🗺️ Get local time and geographic info
 
 ---
 
-## 🧰 Technologies Used
+## 🖥️ Demo
 
-- Python
-- [Streamlit](https://streamlit.io/)
-- [WeatherAPI](https://www.weatherapi.com/)
-- dotenv (for API key management)
-- requests (for API calls)
+You can deploy this app to **Streamlit Cloud** or run it locally.
+
 
 ---
+
+## 🛠️ Features
+
+- ✅ Real-time weather using [WeatherAPI](https://weatherapi.com)
+- ✅ Current conditions: temperature, humidity, visibility, wind
+- ✅ 5-day forecast displayed **horizontally**
+- ✅ Weather icons from WeatherAPI
+- ✅ Displays local time of the selected city
+- ✅ Interactive UI with `streamlit`
+
+---
+
