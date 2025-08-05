@@ -3,16 +3,19 @@ import requests
 import os
 from dotenv import load_dotenv
 
-# Load the API key
+# Load the API key from "weatherapi.com"
 load_dotenv()
 API_KEY = os.getenv("WEATHER_API_KEY")
-BASE_URL = "https://api.weatherapi.com/v1/current.json"
+BASE_URL = "https://api.weatherapi.com/v1/forecast.json"
 
 
 def get_weather(city_name):
     params = {
         "key": API_KEY,
-        "q": city_name
+        "q": city_name,
+        "days": 5, #gives a 5-day forecast
+        "aqi": "no",
+        "alerts": "no"
     }
     response = requests.get(BASE_URL, params=params)
 
@@ -26,21 +29,41 @@ def get_weather(city_name):
 def display_weather(data):
     location = data['location']
     current = data['current']
+    icon_url = "https:" + current['condition']['icon']
+    st.image(icon_url, width=100)
 
     st.subheader(f"Weather in {location['name']}, {location['country']}")
+    st.write(f"**Local Time:** {location['localtime']}")
     st.write(f"**Temperature:** {current['temp_c']} °C")
     st.write(f"**Condition:** {current['condition']['text']}")
     st.write(f"**Humidity:** {current['humidity']}%")
     st.write(f"**Wind Speed:** {current['wind_kph']} km/h")
+    st.write(f"**Visibility:** {current['vis_km']} km")
+
+def display_forecast(data):
+    forecast_days = data['forecast']['forecastday']
+    st.subheader("5-Day Forecast 🌤️")
+    cols = st.columns(5)
+    for i, day in enumerate(forecast_days):
+        date = day['date']
+        avg_temp = day['day']['avgtemp_c']
+        condition = day['day']['condition']['text']
+        icon = "https:" + day['day']['condition']['icon']
+
+        with cols[i]:
+            st.markdown(f"**{date}**")
+            st.image(icon, width=60)
+            st.write(f"{condition}, {avg_temp} °C")
 
 
 # Streamlit UI
-st.title("The Weather App 🌦️")
+st.title("The Weather App ☀️")
 city = st.text_input("Please enter a city name:")
 
 if city:
     weather_data = get_weather(city)
     if weather_data:
         display_weather(weather_data)
+        display_forecast(weather_data)
     else:
         st.error("City not found or unable to fetch weather data.")
