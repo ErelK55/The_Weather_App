@@ -1,5 +1,5 @@
 # The Weather App☀️ 
-(based on Streamlit + WeatherAPI)
+
 
 This is a simple, interactive weather app built using **Python**, **Streamlit**, and **[WeatherAPI.com](https://www.weatherapi.com/)**. It allows users to:
 
