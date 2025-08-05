@@ -1,12 +1,12 @@
 import streamlit as st
 import requests
-import os
+#import os
 import pandas as pd
-from dotenv import load_dotenv
+#from dotenv import load_dotenv
 
 # Load the API key from "weatherapi.com"
-load_dotenv()
-API_KEY = os.getenv("WEATHER_API_KEY", st.secrets["api"]["WEATHER_API_KEY"])
+#load_dotenv()
+API_KEY = st.secrets["api"]["WEATHER_API_KEY"]
 BASE_URL = "https://api.weatherapi.com/v1/forecast.json"
 
 
