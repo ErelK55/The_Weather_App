@@ -1,11 +1,9 @@
 import streamlit as st
 import requests
-#import os
 import pandas as pd
-#from dotenv import load_dotenv
+import plotly.express as px
 
 # Load the API key from "weatherapi.com"
-#load_dotenv()
 API_KEY = st.secrets["api"]["WEATHER_API_KEY"]
 BASE_URL = "https://api.weatherapi.com/v1/forecast.json"
 
@@ -31,9 +29,9 @@ def display_weather(data):
     location = data['location']
     current = data['current']
     icon_url = "https:" + current['condition']['icon']
-    st.image(icon_url, width=100)
 
     st.subheader(f"Weather in {location['name']}, {location['country']}")
+    st.image(icon_url, width=200, caption=current['condition']['text'])
     st.write(f"**Local Time:** {location['localtime']}")
     st.write(f"**Temperature:** {current['temp_c']} °C")
     st.write(f"**Condition:** {current['condition']['text']}")
@@ -42,7 +40,6 @@ def display_weather(data):
     st.write(f"**Visibility:** {current['vis_km']} km")
 
     # Show the location pinpoint on a map
-    st.subheader("Location on Map 🗺️")
     lat = location['lat']
     lon = location['lon']
     map_data = pd.DataFrame({'lat': [lat], 'lon': [lon]})
@@ -64,15 +61,58 @@ def display_forecast(data):
             st.image(icon, width=60)
             st.write(f"{condition}, {avg_temp} °C")
 
+def display_forecast_chart(data):
+    forecast_days = data['forecast']['forecastday']
+    df = pd.DataFrame({
+        "Date": [day['date'] for day in forecast_days],
+        "Average Temp (°C)": [day['day']['avgtemp_c'] for day in forecast_days]
+    })
+
+    st.subheader("📈 Temperature Trend")
+    fig = px.line(df, x="Date", y="Average Temp (°C)",
+                  markers=True,
+                  line_shape='spline')  # Smooth curve
+
+    fig.update_layout(
+        template="plotly_white",
+        xaxis_title="Date",
+        yaxis_title="Temperature (°C)",
+        title_x=0.5,
+        margin=dict(l=20, r=20, t=40, b=20),
+        hovermode="x unified"
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
+
+def set_background():
+    st.markdown("""
+        <style>
+        .stApp {
+            background-color: #f7f9fc;;
+            background-image: linear-gradient(to bottom, #ffecd2, #fcb69f);
+            background-image: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+            color: #333;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
 
 # Streamlit UI
-st.title("The Weather App ☀️")
-city = st.text_input("Please enter a city name:")
+st.title("🌍TheWeatherApp")
+st.markdown("#### Get real-time weather updates and a 5-day forecast!")
+set_background()
+
+city = st.text_input("🔍 Enter a city name:")
 
 if city:
     weather_data = get_weather(city)
     if weather_data:
-        display_weather(weather_data)
-        display_forecast(weather_data)
+        tab1, tab2 = st.tabs(["📍 Current", "📆 Forecast"])
+        with tab1:
+            display_weather(weather_data)
+        with tab2:
+            display_forecast(weather_data)
+            display_forecast_chart(weather_data)
     else:
-        st.error("City not found or unable to fetch weather data.")
+        st.error("❌ City not found or failed to fetch data.")
+

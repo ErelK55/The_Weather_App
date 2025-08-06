@@ -1,3 +1,5 @@
 streamlit  # the web app framework
 requests  # to fetch data from WeatherAPI
 python-dotenv  # to load environment variables (used locally)
+pandas
+plotly
