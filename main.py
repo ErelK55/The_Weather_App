@@ -70,6 +70,7 @@ def display_forecast_chart(data):
 
     st.subheader("📈 Temperature Trend")
     fig = px.line(df, x="Date", y="Average Temp (°C)",
+                  title='5-day Temperature',
                   markers=True,
                   line_shape='spline')  # Smooth curve
 
